@@ -14,7 +14,7 @@ class NFAVisualizer:
     @staticmethod
     def save_image(nfa: Union[NFA, DFA], filepath: str):
         data = nfa.to_dict()
-        G = nx.DiGraph()
+        G = nx.MultiDiGraph()
         for state, trans in data.items():
             if state == "startingState":
                 continue

@@ -13,3 +13,9 @@ class State:
 
     def add_transition(self, symbol: str, next_state: State):
         self.transitions[symbol].append(next_state)
+
+    def __str__(self) -> str:
+        return f"State(name={self.name},transitions={self.transitions})"
+
+    def __repr__(self) -> str:
+        return f"State(name={self.name},transitions_length={len(self.transitions)})"

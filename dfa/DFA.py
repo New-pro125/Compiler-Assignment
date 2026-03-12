@@ -10,7 +10,7 @@ class DFA:
 
     def __init__(self, start: State, end) -> None:
         self._start = start
-        self._end = end  # Either a single State (NFA) or a set of States (minimized DFA)
+        self._end = end
 
     @staticmethod
     def epsilon_closure(states: Iterable[State]) -> FrozenSet[State]:
@@ -28,7 +28,7 @@ class DFA:
     def move(states: Iterable[State], a: str) -> FrozenSet[State]:
         reachable_states = set()
         for state in states:
-            if state.transitions.get(a) is not None:
+            if a in state.transitions:
                 reachable_states.update(state.transitions[a])
         return frozenset(reachable_states)
 
@@ -57,7 +57,6 @@ class DFA:
                 if not next_state:
                     continue
                 dfa_transitions[(curr, symbol)] = next_state
-
                 if next_state not in visited:
                     visited.add(next_state)
                     queue.append(next_state)
@@ -65,45 +64,53 @@ class DFA:
 
     @staticmethod
     def hopcroft(
-        dfa_states: set[FrozenSet[State]],
+        dfa_states: Set[FrozenSet[State]],
         dfa_transitions: Dict[Tuple[FrozenSet[State], str], FrozenSet[State]],
         nfa_accept_state: State,
-        symbols: list[str],
+        symbols: List[str],
     ) -> Tuple[List[Set[FrozenSet[State]]], Set[FrozenSet[State]]]:
-        accepting_groups = set()
-        non_accepting_groups = set()
+        accepting_states = set()
         for state in dfa_states:
             if nfa_accept_state in state:
-                accepting_groups.add(state)
-            else:
-                non_accepting_groups.add(state)
+                accepting_states.add(state)
+        non_accepting_states = dfa_states - accepting_states
         P = []
-        if accepting_groups:
-            P.append(accepting_groups)
-        if non_accepting_groups:
-            P.append(non_accepting_groups)
-        while True:
-            state_to_group_idx = {}
-            for i, group in enumerate(P):
-                for state in group:
-                    state_to_group_idx[state] = i
-            P_new = []
-            for group in P:
-                subgroups = defaultdict(set)
-                for state in group:
-                    signature = []
-                    for symbol in symbols:
-                        target = dfa_transitions.get((state, symbol))
-                        if target is not None:
-                            signature.append(state_to_group_idx[target])
+        W = []
+        if accepting_states:
+            P.append(accepting_states)
+            W.append(accepting_states)
+        if non_accepting_states:
+            P.append(non_accepting_states)
+            W.append(non_accepting_states)
+        inverse_transitions = defaultdict(lambda: defaultdict(list))
+        for (src, c), tgt in dfa_transitions.items():
+            inverse_transitions[tgt][c].append(src)
+        while W:
+            A = W.pop()
+            for c in symbols:
+                X = set()
+                for target in A:
+                    if target in inverse_transitions:
+                        X.update(inverse_transitions[target].get(c, []))
+                splits = []
+                for i, Y in enumerate(P):
+                    Y_int = Y & X
+                    Y_diff = Y - X
+                    if Y_int and Y_diff:
+                        splits.append((i, Y, Y_int, Y_diff))
+                for i, Y, Y_int, Y_diff in splits:
+                    P[i] = Y_int
+                    P.append(Y_diff)
+                    if Y in W:
+                        W.remove(Y)
+                        W.append(Y_int)
+                        W.append(Y_diff)
+                    else:
+                        if len(Y_int) <= len(Y_diff):
+                            W.append(Y_int)
                         else:
-                            signature.append(-1)
-                    subgroups[tuple(signature)].add(state)
-                P_new.extend(subgroups.values())
-            if len(P) == len(P_new):
-                break
-            P = P_new
-        return P, accepting_groups
+                            W.append(Y_diff)
+        return P, accepting_states
 
     @staticmethod
     def build_dfa_from_groupings(
@@ -119,7 +126,7 @@ class DFA:
             for old_state in group:
                 old_to_new_state_map[old_state] = new_state
         min_start_state = old_to_new_state_map[start_dfa_state]
-        min_accepting_states: Set[State] = set()
+        min_accepting_states = set()
         for old_state in accepting_groups:
             min_accepting_states.add(old_to_new_state_map[old_state])
         for group in P:
@@ -127,7 +134,7 @@ class DFA:
             new_s = old_to_new_state_map[representative]
             for symbol in symbols:
                 target = dfa_transitions.get((representative, symbol))
-                if target is not None:
+                if target is not None and target in old_to_new_state_map:
                     new_t = old_to_new_state_map[target]
                     new_s.add_transition(symbol, new_t)
         return DFA(min_start_state, min_accepting_states)
@@ -147,21 +154,18 @@ class DFA:
     def to_dict(self) -> dict:
         result = {"startingState": self._start.name}
         visited, queue = set(), deque([self._start])
+        visited.add(self._start.name)
         while queue:
             curr = queue.popleft()
-            if curr.name in visited:
-                continue
-            visited.add(curr.name)
             is_accepting = (
-                curr in self._end
-                if isinstance(self._end, set)
-                else curr == self._end
+                curr in self._end if isinstance(self._end, set) else curr == self._end
             )
             entry = {"isTerminatingState": is_accepting}
             for symbol, next_states in curr.transitions.items():
                 entry[symbol] = [s.name for s in next_states]
                 for s in next_states:
                     if s.name not in visited:
+                        visited.add(s.name)
                         queue.append(s)
             result[curr.name] = entry
         return result
