@@ -5,6 +5,7 @@ from collections import defaultdict
 
 class State:
     """Represents a state in an NFA with transitions."""
+
     def __init__(self, id: int):
         self.id: int = id
         self.name: str = f"S{id}"

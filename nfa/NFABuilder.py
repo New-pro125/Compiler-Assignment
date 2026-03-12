@@ -22,12 +22,19 @@ class NFABuilder:
         for token in postfix:
             if token in "_|":
                 nfa2, nfa1 = stack.pop(), stack.pop()
-                stack.append(self.concat(nfa1, nfa2) if token == "_" else self.alternate(nfa1, nfa2))
+                stack.append(
+                    self.concat(nfa1, nfa2)
+                    if token == "_"
+                    else self.alternate(nfa1, nfa2)
+                )
             elif token in "*+?":
                 nfa = stack.pop()
-                if token == "*": stack.append(self.zero_or_more(nfa))
-                elif token == "+": stack.append(self.one_or_more(nfa))
-                elif token == "?": stack.append(self.zero_or_one(nfa))
+                if token == "*":
+                    stack.append(self.zero_or_more(nfa))
+                elif token == "+":
+                    stack.append(self.one_or_more(nfa))
+                elif token == "?":
+                    stack.append(self.zero_or_one(nfa))
             else:
                 stack.append(self.literal(token))
         return stack[0]
