@@ -15,7 +15,11 @@ venv/
 .vscode/
 .idea/
 
-
 # OS
 .DS_Store
 Thumbs.db
+test_graph.png
+outputs/
+compilers-venv/
+**/__pycache__/
+.pytest_cache/
