@@ -36,9 +36,7 @@ def process_regex(regex: str, output_name: str):
 
 
 def run_nfa_tests():
-    testcases = [
-        "[a-z]|c",  # a or optional b
-    ]
+    testcases = ["[a-z]|c", "a|b"]  # a or optional b
 
     for i, regex in enumerate(testcases, start=1):
         output_name = f"outputs/testcase_{i}"

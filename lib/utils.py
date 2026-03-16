@@ -6,6 +6,8 @@ def ranges_overlap(r1: Tuple[str, str], r2: Tuple[str, str]) -> bool:
 
 
 def ranges_adjacent(r1: Tuple[str, str], r2: Tuple[str, str]) -> bool:
+    if r1[0] == r1[1] and r2[0] == r2[1]:  # Ranges are just a characters
+        return False
     return ord(r1[1]) + 1 == ord(r2[0]) or ord(r2[1]) + 1 == ord(r1[0])
 
 
@@ -45,7 +47,11 @@ def is_char_inside_range(char: str, token: str) -> bool:
 def is_range_inside_range(sub_token: str, sup_token: str) -> bool:
     if sup_token == ".":
         return True
-    if sub_token == "." or not is_class_token(sub_token) or not is_class_token(sup_token):
+    if (
+        sub_token == "."
+        or not is_class_token(sub_token)
+        or not is_class_token(sup_token)
+    ):
         return False
     sub_ranges: List[Tuple[str, str]] = parse_ranges(sub_token)
     sup_ranges: List[Tuple[str, str]] = parse_ranges(sup_token)
@@ -84,10 +90,7 @@ def _symbol_to_ranges(token: str) -> Optional[List[Tuple[str, str]]]:
 
 
 def _build_class_token(ranges: List[Tuple[str, str]]) -> str:
-    parts: List[str] = [
-        f"{low}-{high}" if low != high else low
-        for low, high in ranges
-    ]
+    parts: List[str] = [f"{low}-{high}" if low != high else low for low, high in ranges]
     return "[" + "".join(parts) + "]"
 
 
@@ -100,7 +103,9 @@ def merge_overlapping_ranges(token_a: str, token_b: str) -> Optional[str]:
     if ranges_a is None or ranges_b is None:
         return None
 
-    all_ranges: List[Tuple[str, str]] = sorted(ranges_a + ranges_b, key=lambda item: item[0])
+    all_ranges: List[Tuple[str, str]] = sorted(
+        ranges_a + ranges_b, key=lambda item: item[0]
+    )
 
     has_overlap: bool = any(
         ranges_overlap(all_ranges[i], all_ranges[i + 1])
