@@ -81,7 +81,7 @@ def run_nfa_tests():
 
         # ─── Case-insensitive style patterns ────────────
         "[Gg]et[Rr]ick[Rr]olled",
-        "[Oo]sama+",
+        "[Oo]sama+[bB][iI][nN][Ll][aA][dD][iI][nN]",
         "S[kK][iI][bB][iI][dD][iI]",
 
         # ─── Plain strings (no regex logic) ─────────────
