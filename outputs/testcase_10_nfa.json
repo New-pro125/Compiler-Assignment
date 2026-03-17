@@ -56,18 +56,6 @@
     ]
   },
   "S9": {
-    "isTerminatingState": false,
-    "\u03b5": [
-      "S10"
-    ]
-  },
-  "S10": {
-    "isTerminatingState": false,
-    "e": [
-      "S11"
-    ]
-  },
-  "S11": {
     "isTerminatingState": true
   }
 }

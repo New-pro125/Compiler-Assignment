@@ -1,85 +1,25 @@
 {
-  "startingState": "S0",
+  "startingState": "S2",
+  "S2": {
+    "isTerminatingState": false,
+    "\u03b5": [
+      "S0",
+      "S3"
+    ]
+  },
   "S0": {
     "isTerminatingState": false,
-    "a": [
+    "c": [
       "S1"
     ]
+  },
+  "S3": {
+    "isTerminatingState": true
   },
   "S1": {
     "isTerminatingState": false,
     "\u03b5": [
-      "S6"
-    ]
-  },
-  "S6": {
-    "isTerminatingState": false,
-    "\u03b5": [
-      "S2",
-      "S4"
-    ]
-  },
-  "S2": {
-    "isTerminatingState": false,
-    "[1-9]": [
       "S3"
     ]
-  },
-  "S4": {
-    "isTerminatingState": false,
-    "[A-Z]": [
-      "S5"
-    ]
-  },
-  "S3": {
-    "isTerminatingState": false,
-    "\u03b5": [
-      "S7"
-    ]
-  },
-  "S5": {
-    "isTerminatingState": false,
-    "\u03b5": [
-      "S7"
-    ]
-  },
-  "S7": {
-    "isTerminatingState": false,
-    "\u03b5": [
-      "S8"
-    ]
-  },
-  "S8": {
-    "isTerminatingState": false,
-    "x": [
-      "S9"
-    ]
-  },
-  "S9": {
-    "isTerminatingState": false,
-    "\u03b5": [
-      "S10"
-    ]
-  },
-  "S10": {
-    "isTerminatingState": false,
-    ".": [
-      "S11"
-    ]
-  },
-  "S11": {
-    "isTerminatingState": false,
-    "\u03b5": [
-      "S12"
-    ]
-  },
-  "S12": {
-    "isTerminatingState": false,
-    "z": [
-      "S13"
-    ]
-  },
-  "S13": {
-    "isTerminatingState": true
   }
 }
