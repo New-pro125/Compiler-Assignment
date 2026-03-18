@@ -23,4 +23,4 @@ test_graph.png
 compilers-venv/
 **/__pycache__/
 .pytest_cache/
-outputs/**
+outputs/
