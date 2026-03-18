@@ -39,54 +39,96 @@ def run_nfa_tests():
 
     test_cases = [
         # ─── Basic literals ─────────────────────────────
-        "a",            # Single character
-        "abc",          # Concatenation: a → b → c
-
+        "a",  # Single character
+        "abc",  # Concatenation: a → b → c
         # ─── Quantifiers ────────────────────────────────
-        "a*",           # Zero or more 'a'
-        "b+",           # One or more 'b'
-        "c?",           # Zero or one 'c'
-        "abc?",         # Optional 'c' at the end
-
+        "a*",  # Zero or more 'a'
+        "b+",  # One or more 'b'
+        "c?",  # Zero or one 'c'
+        "abc?",  # Optional 'c' at the end
         # ─── Alternation ────────────────────────────────
-        "a|b",          
-        "a|b|c",        # Multiple choices
-        "a|b?",         # 'a' or optional 'b'
-        "ab|cd",        
-        "ab|cd|ef",     
-        "[a-z]|c",      
-
+        "a|b",
+        "a|b|c",  # Multiple choices
+        "a|b?",  # 'a' or optional 'b'
+        "ab|cd",
+        "ab|cd|ef",
+        "[a-z]|c",
         # ─── Grouping & nesting ─────────────────────────
-        "(ab|cd)e",     # Group followed by 'e'
-        "((a|b)c)+",    # Nested group repeated
-        "(a+b)+",       
-        "(a|b)*abb",    
-
+        "(ab|cd)e",  # Group followed by 'e'
+        "((a|b)c)+",  # Nested group repeated
+        "(a+b)+",
+        "(a|b)*abb",
         # ─── Character classes ──────────────────────────
-        "[a-c][x-z]*",  
+        "[a-c][x-z]*",
         "[a-zA-Z]+[0-9]?",
         "[a-zA-Z0-9]+",
-
         # ─── Mixed expressions ──────────────────────────
-        "a(b|c)*d+",    
-        "ab.c*d[a-c]",  
-        "a?(a+b)*b",    
-
+        "a(b|c)*d+",
+        "ab.c*d[a-c]",
+        "a?(a+b)*b",
         # ─── Wildcards ──────────────────────────────────
-        "a.",           # Any character after 'a'
-
+        "a.",  # Any character after 'a'
         # ─── Complex / real-like patterns ───────────────
         "[a-zA-Z0-9]+2[a-zA-Z]+.[a-zA-Z]+",
         "(N|[oO]h?)?[a-z]*(g[.]?r[.]?e[.]?a[.]?t)[a-z]*",
-
         # ─── Case-insensitive style patterns ────────────
         "[Gg]et[Rr]ick[Rr]olled",
         "[Oo]sama+[bB][iI][nN][Ll][aA][dD][iI][nN]",
         "S[kK][iI][bB][iI][dD][iI]",
-
         # ─── Plain strings (no regex logic) ─────────────
         "ab",
         "TheBoysWishesUEidMubarak",
+        # Hard Testcases
+        "a|b|c|d|e",
+        "(a|b)|(c|d)",
+        "abc|def|ghi",
+        "(ab)|(cd)|(ef)",
+        "(a|b|c)(d|e|f)",
+        "x(a|b|c)y",
+        "(cat|dog|bird)",
+        "(ab|a)b",
+        "a(a|b)*",
+        "(a|b)*aba(a|b)*",
+        "a*b*c*",
+        "a*b+c?",
+        "(a*)*",
+        "(a+b)+",
+        "((a|b)c)+",
+        "((ab)+c)*",
+        "(a*b*)+",
+        "(a?b?)+",
+        "((a|b)(c|d))+",
+        "((a?)?)?",
+        "[a-z]|c",
+        "[a-c][x-z]*",
+        "[a-zA-Z]+[0-9]?",
+        "[a-zA-Z0-9]+",
+        "[a-z0-9]",
+        "[a-f0-9]+",
+        "[a-c][d-f][g-i]",
+        "[a-zA-Z][a-zA-Z0-9]*",
+        "[a-z]+[A-Z][a-z]+",
+        "a(b|c)*d+",
+        "ab.c*d[a-c]",
+        "a?(a+b)*b",
+        "(a|b)*c(d|e)+f?",
+        "[a-z]+(0|1|[2-9])[a-z]+",
+        "([A-Z][a-z]+)+",
+        "([a-z]+[0-9]?)+",
+        "(([a-z]+[.])+[a-z]+)",
+        "[a-z]+@[a-z]+[.][a-z]+",
+        "https?://[a-zA-Z0-9]+",
+        ".*",
+        ".+",
+        "a.*b",
+        ".*a.*",
+        ".?.?",
+        "a.b.c",
+        "(a|.)+",
+        "(0|[1-9][0-9]*)",
+        "(-)?[0-9]+([.][0-9]+)?",
+        "v[0-9]+[.][0-9]+[.][0-9]+",
+        "[0-9][0-9]?[/][0-9][0-9]?[/][0-9][0-9][0-9][0-9]",
     ]
 
     for i, regex in enumerate(test_cases, start=1):

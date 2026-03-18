@@ -106,15 +106,15 @@ def merge_overlapping_ranges(token_a: str, token_b: str) -> Optional[str]:
     all_ranges: List[Tuple[str, str]] = sorted(
         ranges_a + ranges_b, key=lambda item: item[0]
     )
+    both_class_tokens: bool = is_class_token(token_a) and is_class_token(token_b)
 
     has_overlap: bool = any(
         ranges_overlap(all_ranges[i], all_ranges[i + 1])
         or ranges_adjacent(all_ranges[i], all_ranges[i + 1])
         for i in range(len(all_ranges) - 1)
     )
-    if not has_overlap:
+    if not has_overlap and not both_class_tokens:
         return None
-
     merged: List[Tuple[str, str]] = [all_ranges[0]]
     for low, high in all_ranges[1:]:
         prev_low, prev_high = merged[-1]
